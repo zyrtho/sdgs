@@ -66,11 +66,11 @@ class DragObj extends DynamicObj {
     set on_dest(callback) {
         this.#on_dest_callback = callback;
     }
-    start_grab(t) {
+    start_grab(t) { // "t" is for "this"; normal "this" doesn't work for some JS reasons. "this" became a DOM object when start_grab is called from EventListener. so use "t" instead of this. in this function
         let offset_x = 0;
         let offset_y = 0;
         let on_drag = (e) => {
-            if (!t.is_draggable) {
+            if (!t.is_draggable) { 
                 document.removeEventListener("mousedown", start);
                 document.removeEventListener("mousemove", on_drag);
                 document.removeEventListener("mouseup", on_release);
