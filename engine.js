@@ -1,13 +1,22 @@
 let display = document.querySelector("body");
 
+function Img(path, w, h) {
+    let img = document.createElement("img");
+    img.setAttribute("src", path);
+    img.setAttribute("draggable", "false");
+    img.setAttribute("width", w + "px");
+    img.setAttribute("height", h + "px");
+    return img;
+}
+
 class Obj {
     #X;
     #Y;
     constructor(element, x, y) {
         this.element = element;
         element.style.position = "absolute";
-        this.x = x || 0;
-        this.y = y || 0;
+        this.x = x || element.left || 0;
+        this.y = y || element.top || 0;
         display.appendChild(element);
     }
     set x(x) {
@@ -66,7 +75,7 @@ class DragObj extends DynamicObj {
     set on_dest(callback) {
         this.#on_dest_callback = callback;
     }
-    start_grab(t) { // "t" is for "this"; normal "this" doesn't work for some JS reasons. "this" became a DOM object when start_grab is called from EventListener. so use "t" instead of this. in this function
+    start_grab(t) { // "t" is for "this"; normal "this" doesn't work for some JS reasons. "this" became a DOM object when start_grab is called from EventListener. so use "t" instead of "this". in this function
         let offset_x = 0;
         let offset_y = 0;
         let on_drag = (e) => {
@@ -86,6 +95,7 @@ class DragObj extends DynamicObj {
             }
         }
         let on_release = (e) => {
+            // console.log(this.#dest);
             document.removeEventListener("mousemove", on_drag);
             document.removeEventListener("mouseup", on_release);
             t.#on_release_callback(e);
